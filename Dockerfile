@@ -14,3 +14,4 @@ RUN ./csgoserver auto-install
 EXPOSE 27015/tcp
 EXPOSE 27015/udp
 EXPOSE 27020/udp
+EXPOSE 27005/udp
