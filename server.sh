@@ -9,7 +9,6 @@ MAPGROUP=random_classic
 MAXPLAYERS=16
 GAMEMODE=1
 GAMETYPE=0
-TVENABLE=1
 
 PORTOFFSET=$((($1-1)*100))
 SERVERPORT=$((27015+$PORTOFFSET))
@@ -20,4 +19,3 @@ docker run -dti --name akl$1 -h akl$1 -p $SERVERPORT:27015/tcp -p $SERVERPORT:27
 docker exec akl$1 sed -i "/hostname \"/s/\"\([^\\\"]*\)\"/\"$HOSTNAME\"/" serverfiles/csgo/cfg/csgo-server.cfg
 docker exec akl$1 sed -i "/rcon_password \"/s/\"\([^\\\"]*\)\"/\"$RCONPASSWORD\"/" serverfiles/csgo/cfg/csgo-server.cfg
 docker exec akl$1 sed -i "/sv_password \"/s/\"\([^\\\"]*\)\"/\"$PASSWORD\"/" serverfiles/csgo/cfg/csgo-server.cfg
-docker exec akl$1 echo tv_enable "$TVENABLE" \>\> serverfiles/csgo/cfg/csgo-server.cfg
