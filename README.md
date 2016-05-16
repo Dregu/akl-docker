@@ -9,6 +9,7 @@
 ## Deploy server
 
 ```
+# vim server.sh               # Change passwords and naming schemes.
 # ./server.sh <NUM> <GSLT>
 ```
 
