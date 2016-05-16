@@ -6,6 +6,8 @@
 # docker build -t "dregu/csgo:latest" .
 ```
 
+This might take hours.
+
 ## Deploy server
 
 ```
@@ -21,7 +23,7 @@ Server number 1 will get default ports, server number n gets 27015+(n-1)*100.
 # docker attach akl1
 ```
 
-Detach with ctrl+p ctrl+q.
+Detach with Ctrl+P Ctrl+Q.
 
 ## Customize
 
