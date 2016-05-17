@@ -94,5 +94,4 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
   esac
 done
 
-docker build -t "dregu/csgo:latest" .
 docker run -dti $DOCKERNAME -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" --entrypoint "$ENTRYPOINT" dregu/csgo
