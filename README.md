@@ -14,7 +14,6 @@ This might take hours.
 # ./server.sh
   -i index 
   -g gslt
-  -l sv_lan
   -h hostname
   -r rcon_password
   -p password
@@ -26,6 +25,7 @@ This might take hours.
   -P port
   -I ip
   -e docker entrypoint
+  -H docker hostname
 ```
 
 Server number 1 will get default ports, server number n gets 27015+(n-1)*100.
