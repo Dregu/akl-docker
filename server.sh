@@ -77,7 +77,6 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
       echo 'Usage: ./server.sh
   -i index
   -g gslt
-  -l sv_lan
   -h hostname
   -r rcon_password
   -p password
@@ -88,7 +87,8 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
   -y game_type
   -P port
   -I ip
-  -e docker entrypoint'
+  -e docker entrypoint
+  -H docker hostname'
       exit 1
       ;;
   esac
