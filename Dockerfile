@@ -2,7 +2,7 @@ FROM phusion/baseimage:0.9.18
 MAINTAINER Dregu <dregu@dreg.us>
 ENV DEBIAN_FRONTEND noninteractive
 CMD ["/sbin/my_init"]
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y lib32gcc1 libstdc++6:i386 curl tmux bsdmainutils wget mailutils postfix
+RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y lib32gcc1 libstdc++6:i386 curl tmux bsdmainutils wget mailutils postfix git nano npm
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 RUN useradd -m cs && chown cs:cs /home/cs -R && echo "cs ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN curl https://raw.githubusercontent.com/dgibbs64/linuxgsm/master/CounterStrikeGlobalOffensive/csgoserver > /home/cs/csgoserver
@@ -11,6 +11,16 @@ RUN echo "cs ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER cs
 WORKDIR /home/cs
 RUN ./csgoserver auto-install
+WORKDIR /home/cs
+RUN echo '#!/bin/bash\n\
+sed -i "/hostname \"/s/\"\([^\\"]*\)\"/\"$HOSTNAME\"/" serverfiles/csgo/cfg/csgo-server.cfg\n\
+sed -i "/rcon_password \"/s/\"\([^\\"]*\)\"/\"$RCONPASSWORD\"/" serverfiles/csgo/cfg/csgo-server.cfg\n\
+sed -i "/sv_password \"/s/\"\([^\\"]*\)\"/\"$PASSWORD\"/" serverfiles/csgo/cfg/csgo-server.cfg\n\
+sed -ie "\$atv_enable \"1\"" serverfiles/csgo/cfg/csgo-server.cfg\n\
+cd /home/cs/serverfiles\n\
+./srcds_run -game csgo -usercon -strictportbind -ip 0.0.0.0 -port 27015 +clientport 27005 +tv_port 27020 -tickrate $TICKRATE +sv_setsteamaccount $GSLT +map $MAP +servercfgfile csgo-server.cfg -maxplayers_override $MAXPLAYERS +mapgroup $MAPGROUP +game_mode $GAMEMODE +game_type $GAMETYPE' >> /home/cs/start
+RUN chmod a+x /home/cs/start
+RUN curl https://raw.githubusercontent.com/Dregu/akl-docker/master/esl5on5.cfg > /home/cs/serverfiles/csgo/cfg/esl5on5.cfg
 EXPOSE 27015/tcp
 EXPOSE 27015/udp
 EXPOSE 27020/udp
