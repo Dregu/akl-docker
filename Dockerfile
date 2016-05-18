@@ -23,4 +23,6 @@ sed -i "/sv_password \"/s/\"\([^\\"]*\)\"/\"$PASSWORD\"/" serverfiles/csgo/cfg/c
 sed -ie "\$atv_enable \"1\"" serverfiles/csgo/cfg/csgo-server.cfg\n\
 cd /home/cs/serverfiles\n\
 ./srcds_run -game csgo -usercon -strictportbind -ip $(hostname --ip-address) -port 27015 +clientport 27005 +tv_port 27020 -tickrate $TICKRATE +sv_setsteamaccount $GSLT +map $MAP +servercfgfile csgo-server.cfg -maxplayers_override $MAXPLAYERS +mapgroup $MAPGROUP +game_mode $GAMEMODE +game_type $GAMETYPE' >> /home/cs/start
-RUN chmod a+x /home/cs/start && (curl https://raw.githubusercontent.com/Dregu/akl-docker/master/esl5on5.cfg > /home/cs/serverfiles/csgo/cfg/esl5on5.cfg)
+RUN chmod a+x /home/cs/start
+COPY esl5on5.cfg /home/cs/serverfiles/csgo/cfg/esl5on5.cfg
+COPY aim_map.bsp /home/cs/serverfiles/csgo/maps/aim_map.bsp
