@@ -15,8 +15,9 @@ TVPORT=27020
 CLIENTPORT=27005
 DOCKERNAME=
 ENTRYPOINT=/home/cs/start
+CUSTOM=
 
-while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
+while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:c:" i; do
   case $i in
     i)
       I=$OPTARG
@@ -60,6 +61,7 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
       CLIENTPORT=$(($SERVERPORT-10))
       ;;
     I)
+      IP="--ip $OPTARG"
       SERVERPORT="$OPTARG:$SERVERPORT"
       TVPORT="$OPTARG:$TVPORT"
       CLIENTPORT="$OPTARG:$CLIENTPORT"
@@ -69,6 +71,9 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
       ;;
     H)
       DOCKERNAME="--name $OPTARG -h $OPTARG"
+      ;;
+    c)
+      CUSTOM="$OPTARG"
       ;;
     \?)
       echo 'Usage: ./server.sh
@@ -85,10 +90,14 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:" i; do
   -P port
   -I ip
   -e docker entrypoint
-  -H docker hostname'
+  -H docker hostname
+  -c custom variables to srcds'
       exit 1
       ;;
   esac
 done
 
-docker run -dti $DOCKERNAME -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" --entrypoint "$ENTRYPOINT" dregu/csgo
+mkdir -p -m a+rw /home/cs/matches
+docker run -dti $DOCKERNAME -v /home/cs/matches:/home/cs/serverfiles/csgo/matches -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" -e CUSTOM="$CUSTOM" --entrypoint "$ENTRYPOINT" dregu/csgo
+
+# iptables -t nat -I POSTROUTING -p all -s 172.17.0.4 -j SNAT --to-source 10.0.0.69

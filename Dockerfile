@@ -16,13 +16,14 @@ USER cs
 WORKDIR /home/cs
 RUN ./csgoserver auto-install
 WORKDIR /home/cs
-RUN echo '#!/bin/bash\n\
+RUN (echo '#!/bin/bash\n\
 sed -i "/hostname \"/s/\"\([^\\"]*\)\"/\"$HOSTNAME\"/" serverfiles/csgo/cfg/csgo-server.cfg\n\
 sed -i "/rcon_password \"/s/\"\([^\\"]*\)\"/\"$RCONPASSWORD\"/" serverfiles/csgo/cfg/csgo-server.cfg\n\
 sed -i "/sv_password \"/s/\"\([^\\"]*\)\"/\"$PASSWORD\"/" serverfiles/csgo/cfg/csgo-server.cfg\n\
 sed -ie "\$atv_enable \"1\"" serverfiles/csgo/cfg/csgo-server.cfg\n\
 cd /home/cs/serverfiles\n\
-./srcds_run -game csgo -usercon -strictportbind -ip $(hostname --ip-address) -port 27015 +clientport 27005 +tv_port 27020 -tickrate $TICKRATE +sv_setsteamaccount $GSLT +map $MAP +servercfgfile csgo-server.cfg -maxplayers_override $MAXPLAYERS +mapgroup $MAPGROUP +game_mode $GAMEMODE +game_type $GAMETYPE' >> /home/cs/start
-RUN chmod a+x /home/cs/start
+./srcds_run -game csgo -usercon -strictportbind -ip $(hostname --ip-address) -port 27015 +clientport 27005 +tv_port 27020 -tickrate $TICKRATE +sv_setsteamaccount $GSLT +map $MAP +servercfgfile csgo-server.cfg -maxplayers_override $MAXPLAYERS +mapgroup $MAPGROUP +game_mode $GAMEMODE +game_type $GAMETYPE $CUSTOM' >> /home/cs/start)\
+  && chmod a+x /home/cs/start && mkdir -p /home/cs/serverfiles/csgo/matches && (sudo sh -c "echo Europe/Helsinki > /etc/timezone") && sudo dpkg-reconfigure -f noninteractive tzdata
 COPY esl5on5.cfg /home/cs/serverfiles/csgo/cfg/esl5on5.cfg
 COPY aim_map.bsp /home/cs/serverfiles/csgo/maps/aim_map.bsp
+VOLUME /home/cs/serverfiles/csgo/matches
