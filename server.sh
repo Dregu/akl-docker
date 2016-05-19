@@ -10,6 +10,7 @@ MAPGROUP=mg_active
 MAXPLAYERS=16
 GAMEMODE=1
 GAMETYPE=0
+IP=
 SERVERPORT=27015
 TVPORT=27020
 CLIENTPORT=27005
@@ -62,9 +63,6 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:c:" i; do
       ;;
     I)
       IP="$OPTARG"
-      SERVERPORT="$OPTARG:$SERVERPORT"
-      TVPORT="$OPTARG:$TVPORT"
-      CLIENTPORT="$OPTARG:$CLIENTPORT"
       ;;
     e)
       ENTRYPOINT="$OPTARG"
@@ -97,6 +95,11 @@ while getopts "i:g:h:r:p:t:m:M:o:y:P:I:e:H:c:" i; do
   esac
 done
 
+if [[ $IP ]]; then
+  SERVERPORT="$IP:$SERVERPORT"
+  TVPORT="$IP:$TVPORT"
+  CLIENTPORT="$IP:$CLIENTPORT"
+fi
 mkdir -p -m a+rw /home/cs/matches
-$CID=`docker run -dti $DOCKERNAME -v /home/cs/matches:/home/cs/serverfiles/csgo/matches -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" -e CUSTOM="$CUSTOM" --entrypoint "$ENTRYPOINT" dregu/csgo`
-[[ $IP -eq "" ]] || iptables -t nat -I POSTROUTING -p all -s `docker inspect --format '{{ .NetworkSettings.IPAddress }}' $CID` -j SNAT --to-source $IP
+CID=`docker run -dti $DOCKERNAME -v /home/cs/matches:/home/cs/serverfiles/csgo/matches -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" -e CUSTOM="$CUSTOM" --entrypoint "$ENTRYPOINT" dregu/csgo`
+[[ $IP ]] && iptables -t nat -I POSTROUTING -p all -s `docker inspect --format '{{ .NetworkSettings.IPAddress }}' $CID` -j SNAT --to-source "$IP"
