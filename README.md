@@ -1,17 +1,19 @@
 # akl-docker
 
+(Yet another) Dockerfile and start script for cs:go. Uses [LGSM](https://gameservermanagers.com/lgsm/csgoserver/) for installation and easy updates.
+
 ## Build
 
 ```
 # docker build -t "dregu/csgo:latest" .
 ```
 
-This might take hours.
+This might take hours. You might want to edit your Dockerfile to change the timezone and whatnot.
 
 ## Deploy server
 
 ```
-# ./server.sh
+# sudo ./server.sh
   -i index 
   -g gslt
   -h hostname
@@ -28,13 +30,14 @@ This might take hours.
   -H docker hostname
 ```
 
-Server number 1 will get default ports, server number n gets 27015+(n-1)*100.
-If you specify port with -P, tvport will be serverport+5 and clientport will be serverport-10.
+If you use -i, server number 1 will get default ports, server number n gets 27015+(n-1)*100.
+If you use -P, tvport will be serverport+5 and clientport will be serverport-10.
+If you use -I, the script will try to make a source nat with iptables, so use sudo.
 
 ## Access console
 
 ```
-# docker attach cs1
+# docker attach CID
 ```
 
 Detach with Ctrl+P Ctrl+Q.
@@ -42,8 +45,8 @@ Detach with Ctrl+P Ctrl+Q.
 ## Customize
 
 ```
-# docker exec -it cs1 bash
-$ vim serverfiles/csgo/cfg/csgo-server.cfg
-$ exit
-# docker restart cs1
+# docker exec -it CID bash
+  $ vim serverfiles/csgo/cfg/csgo-server.cfg
+  $ exit
+# docker restart CID
 ```
