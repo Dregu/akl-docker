@@ -1,6 +1,6 @@
 # akl-docker
 
-(Yet another) Dockerfile and start script for cs:go. Uses [LGSM](https://gameservermanagers.com/lgsm/csgoserver/) for installation and easy updates.
+(Yet another) Dockerfile and start script for cs:go. Uses [LGSM](https://gameservermanagers.com/lgsm/csgoserver/) for installation and easy updates. Supports custom ip:port and source nat for outbound connections.
 
 ## Build
 
