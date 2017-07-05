@@ -101,5 +101,5 @@ if [[ $IP ]]; then
   CLIENTPORT="$IP:$CLIENTPORT"
 fi
 mkdir -p -m a+rw /home/cs/matches
-CID=`docker run -dti $DOCKERNAME --privileged=true -v /home/cs/matches:/home/cs/serverfiles/csgo/matches -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/tcp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" -e CUSTOM="$CUSTOM" -e PUBLIC="$IP" --entrypoint "$ENTRYPOINT" dregu/csgo`
+CID=`docker run -dti $DOCKERNAME --privileged=true -v /home/cs/matches:/home/cs/serverfiles/csgo/matches -p $SERVERPORT:27015/tcp -p $SERVERPORT:27015/udp -p $TVPORT:27020/tcp -p $TVPORT:27020/udp -p $CLIENTPORT:27005/udp -e TICKRATE="$TICKRATE" -e GSLT="$GSLT" -e MAP="$MAP" -e MAXPLAYERS="$MAXPLAYERS" -e MAPGROUP="$MAPGROUP" -e GAMEMODE="$GAMEMODE" -e GAMETYPE="$GAMETYPE" -e HOSTNAME="$HOSTNAME" -e RCONPASSWORD="$RCONPASSWORD" -e PASSWORD="$PASSWORD" -e CUSTOM="$CUSTOM" -e PUBLIC="$IP" --entrypoint "$ENTRYPOINT" isaul32/csgo`
 [[ $IP ]] && iptables -t nat -I POSTROUTING -p all -s `docker inspect --format '{{ .NetworkSettings.IPAddress }}' $CID` -j SNAT --to-source "$IP"
